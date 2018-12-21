@@ -266,10 +266,17 @@ struct GpuDistance< L2_Simple<float> >
 {
     typedef CudaL2 type;
 };
+
 template<>
 struct GpuDistance< L1<float> >
 {
     typedef CudaL1 type;
+};
+
+template<>
+struct GpuDistance< ChiSquareDistance<float> >
+{
+    typedef CudaL2 type;
 };
 
 
@@ -840,4 +847,24 @@ int KDTreeCuda3dIndex< flann::L1<float> >::radiusSearchGpu(const Matrix<ElementT
 template
 int KDTreeCuda3dIndex< flann::L1<float> >::radiusSearchGpu(const Matrix<ElementType>& queries, std::vector< std::vector<int> >& indices,
                                                            std::vector<std::vector<DistanceType> >& dists, float radius, const SearchParams& params) const;
+
+// explicit instantiations for distance-independent functions
+template
+void KDTreeCuda3dIndex<flann::ChiSquareDistance<float> >::uploadTreeToGpu();
+
+template
+void KDTreeCuda3dIndex<flann::ChiSquareDistance<float> >::clearGpuBuffers();
+
+template
+struct KDTreeCuda3dIndex<flann::ChiSquareDistance<float> >::GpuHelper;
+
+template
+void KDTreeCuda3dIndex<flann::ChiSquareDistance<float> >::knnSearchGpu(const Matrix<ElementType>& queries, Matrix<int>& indices, Matrix<DistanceType>& dists, size_t knn, const SearchParams& params) const;
+
+template
+int KDTreeCuda3dIndex< flann::ChiSquareDistance<float> >::radiusSearchGpu(const Matrix<ElementType>& queries, Matrix<int>& indices, Matrix<DistanceType>& dists, float radius, const SearchParams& params) const;
+template
+int KDTreeCuda3dIndex< flann::ChiSquareDistance<float> >::radiusSearchGpu(const Matrix<ElementType>& queries, std::vector< std::vector<int> >& indices,
+                                                           std::vector<std::vector<DistanceType> >& dists, float radius, const SearchParams& params) const;
+
 }
